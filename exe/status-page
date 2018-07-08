@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+
+require "status_page"
+StatusPage::CLI.start(ARGV)
