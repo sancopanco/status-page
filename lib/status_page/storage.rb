@@ -1,3 +1,4 @@
+require "fileutils"
 module StatusPage
   module Storage
     def save(items)
@@ -15,6 +16,11 @@ module StatusPage
     #TODO: backup file should exist?
     def create_backup(path=backup_file)
       File.rename(file_path, path)
+      FileUtils.cp(path, file_path)
+    end
+
+    #TODO: check this!
+    def restore_backup(path=backup_file)
       FileUtils.cp(path, file_path)
     end
 

@@ -22,4 +22,37 @@ describe 'StatusPage::Storage' do
     end
   end
 
+  describe '.read' do
+    it 'should read and yield from file_path' do
+      row = double("row")
+      expect(CSV).to receive(:foreach).with("file_path").and_yield(row)
+      subject.read{}  
+    end
+  end
+
+  describe '.create_backup' do
+    let(:path) { "path" }
+    it 'should backup to path' do
+      expect(File).to receive(:rename).with("file_path", path)
+      expect(FileUtils).to receive(:cp).with(path, "file_path")
+      subject.create_backup(path)
+    end
+  end
+
+  describe '.restore_backup' do
+    let(:path) { "path" }
+    it 'should restore from path' do
+      expect(FileUtils).to receive(:cp).with(path, "file_path")
+      subject.restore_backup(path)
+    end
+  end
+
+  describe '.backup_file' do
+    it { should respond_to(:backup_file) }
+  end
+
+  describe '.file_path' do
+    it { should respond_to(:file_path) }
+  end
+
 end

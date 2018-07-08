@@ -48,6 +48,13 @@ module StatusPage
       create_backup(path)
     end
 
+    desc "restore <path>", "Restore backup data"
+    long_desc %Q{ Takes a path variable which is a backup
+                created by the application and restores that data. }
+    def restore(path=backup_file)
+      restore_backup(path)
+    end
+
 
     private
 
