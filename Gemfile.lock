@@ -4,6 +4,7 @@ PATH
     status_page (0.1.0)
       httparty
       nokogiri
+      terminal-table
       thor (~> 0.20)
 
 GEM
@@ -30,7 +31,10 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.7.0)
     rspec-support (3.7.1)
+    terminal-table (1.8.0)
+      unicode-display_width (~> 1.1, >= 1.1.1)
     thor (0.20.0)
+    unicode-display_width (1.4.0)
 
 PLATFORMS
   ruby

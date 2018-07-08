@@ -6,7 +6,8 @@ module StatusPage
 
     class_option :config_file, default: File.join(ENV['HOME'],'.status-page.rc.yaml')
     class_option :service_name
-    
+    class_option :format, default: "pretty"
+
     option :yell, type: :boolean
     desc "pull", "Pull all the status page infos"
     long_desc %Q{ Pull all the status page data from different providers and save into the data store.
@@ -39,7 +40,16 @@ module StatusPage
     private
 
     def live_log
-      puts get_services
+      formater = output_formats[options[:format]]
+      formater.format(get_services)
+    end
+
+    def output_formats
+      {
+        "csv" => StatusPage::Format::CSV.new,
+        "pretty" =>  StatusPage::Format::Pretty.new,
+        "table" => StatusPage::Format::Table.new
+      }
     end
 
     def get_services
