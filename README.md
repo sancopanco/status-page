@@ -22,7 +22,20 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+### Commands:
+  `status-page backup <path>`   # Creates a backup of historic and currently saved data.
+  `status-page help [COMMAND]`  # Describe available commands or one specific command
+  `status-page history`         # Display all the data
+  `status-page live`            # Output the status periodically on the console
+  `status-page pull`            # Pull all the status page infos
+  `status-page restore <path>`  # Restore backup data
+  `status-page status`          # Summarizes the data and displays
+  `status-page version`         # Display Statuspage gem version
+
+### Options:
+  [--config-file=CONFIG_FILE]   # Default: ~/.status-page.rc.yaml
+  [--service-name=SERVICE_NAME]
+  [--format=FORMAT]             # Default: pretty
 
 ## Development
 
