@@ -45,4 +45,11 @@ describe 'StatusPage::CLI' do
       status_page("history")
     end
   end
+
+  describe '.backup' do
+    it 'should create a backup' do
+      expect_any_instance_of(StatusPage::CLI).to receive(:create_backup).with("path")
+      status_page("backup path")
+    end
+  end
 end

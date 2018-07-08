@@ -12,8 +12,18 @@ module StatusPage
       end
     end
 
+    #TODO: backup file should exist?
+    def create_backup(path=backup_file)
+      File.rename(file_path, path)
+      FileUtils.cp(path, file_path)
+    end
+
     def file_path
       File.join(ENV['HOME'], ".status-page.csv")
+    end
+
+    def backup_file
+      File.join(ENV['HOME'], '.status-page.csv.backup')
     end
 
     private

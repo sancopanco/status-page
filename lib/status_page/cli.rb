@@ -42,6 +42,12 @@ module StatusPage
       history_log
     end
 
+    desc "backup <path>", "Creates a backup of historic and currently saved data."
+    long_desc %Q{ Creates a backup of historic and currently saved data. }
+    def backup(path=backup_file)
+      create_backup(path)
+    end
+
 
     private
 
@@ -90,7 +96,7 @@ module StatusPage
           {name: "Bitbucket", url: "https://status.bitbucket.org/",status_page_css: "div.page-status > span.status"}
         ],
         "yell": false,
-        backup_file: File.join(ENV['HOME'], '.status-page.csv.backup')
+        backup_file: backup_file
       })
     end
 
