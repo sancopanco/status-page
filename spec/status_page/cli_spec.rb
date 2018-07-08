@@ -38,4 +38,11 @@ describe 'StatusPage::CLI' do
       status_page("live")
     end
   end
+
+  describe '.history' do
+    it 'should display all data' do
+      expect_any_instance_of(StatusPage::CLI).to receive(:history_log)
+      status_page("history")
+    end
+  end
 end

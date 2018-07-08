@@ -36,12 +36,25 @@ module StatusPage
       end
     end
 
+    desc "history", "Display all the data"
+    long_desc %Q{Display all the data which was gathered by the tool}
+    def history
+      history_log
+    end
+
 
     private
 
     def live_log
-      formater = output_formats[options[:format]]
       formater.format(get_services)
+    end
+
+    def history_log
+      formater.format(read_services, live=false)
+    end
+
+    def formater
+      formater = output_formats[options[:format]]
     end
 
     def output_formats
@@ -55,6 +68,16 @@ module StatusPage
     def get_services
       services = options[:services].map{|s| StatusPage::Service.new(s) }
       services = services.select{|s| s.name == options[:service_name]} if options[:service_name]
+      services
+    end
+
+    def read_services
+      services = []
+      read do |row|
+        services << StatusPage::Service.new(name:row[0], url:row[1],
+          status_page_css:row[2], 
+          status:row[3], time: row[4])
+      end
       services
     end
 

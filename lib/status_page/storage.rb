@@ -6,6 +6,12 @@ module StatusPage
       end
     end
 
+    def read
+      CSV.foreach("#{file_path}") do |row|
+        yield row
+      end
+    end
+
     def file_path
       File.join(ENV['HOME'], ".status-page.csv")
     end
