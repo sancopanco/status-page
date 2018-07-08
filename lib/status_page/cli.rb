@@ -20,11 +20,13 @@ module StatusPage
     private
 
     def live_log
-
+      puts get_services
     end
 
     def get_services
-      []
+      services = options[:services].map{|s| StatusPage::Service.new(s) }
+      services = services.select{|s| s.name == options[:service_name]} if options[:service_name]
+      services
     end
 
     def default_options

@@ -1,6 +1,5 @@
 require "status_page"
 
-
 def status_page(args)
   capture_stdout do
     begin
