@@ -24,4 +24,18 @@ describe 'StatusPage::CLI' do
       status_page("pull --yell=true")
     end
   end
+
+  describe '.live' do
+    let(:services) { double("services") }
+    before do
+      expect_any_instance_of(StatusPage::CLI).to receive(:loop).and_yield.and_yield
+    end
+
+    it 'should check output the status periodically' do
+      expect_any_instance_of(StatusPage::CLI).to receive(:get_services).and_return(services, services)
+      expect_any_instance_of(StatusPage::CLI).to receive(:save).with(services).exactly(:twice).times
+      expect_any_instance_of(StatusPage::CLI).to receive(:live_log).exactly(:twice).times
+      status_page("live")
+    end
+  end
 end

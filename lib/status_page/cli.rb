@@ -5,7 +5,8 @@ module StatusPage
     include Storage
 
     class_option :config_file, default: File.join(ENV['HOME'],'.status-page.rc.yaml')
-
+    class_option :service_name
+    
     option :yell, type: :boolean
     desc "pull", "Pull all the status page infos"
     long_desc %Q{ Pull all the status page data from different providers and save into the data store.
@@ -14,6 +15,24 @@ module StatusPage
     def pull
       live_log if options[:yell]
       save(get_services)
+    end
+
+    desc "live", "Output the status periodically on the console"
+    long_desc %Q{
+      Constantly query the URLs and output
+      the status periodically on the console and save it to the data store.
+    }
+    def live
+      loop do
+        live_log
+        save(get_services)
+        trap(:INT) { 
+           #TODO: make it stable
+           puts "Exiting program"
+           exit
+         }
+         sleep 1
+      end
     end
 
 
