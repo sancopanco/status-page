@@ -55,6 +55,15 @@ module StatusPage
       restore_backup(path)
     end
 
+    desc "status", "Summarizes the data and displays"
+    def status
+      puts "TODO:status"  
+    end
+
+    desc "version", "Display Statuspage gem version"
+    def version
+      puts StatusPage::VERSION
+    end
 
     private
 

@@ -52,4 +52,10 @@ describe 'StatusPage::CLI' do
       status_page("backup path")
     end
   end
+
+  describe '.version' do
+    it "displays gem version" do
+      expect(status_page("version").chomp).to eq(StatusPage::VERSION)
+    end
+  end
 end
