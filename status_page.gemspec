@@ -7,20 +7,11 @@ Gem::Specification.new do |spec|
   spec.name          = "status_page"
   spec.version       = StatusPage::VERSION
   spec.authors       = ["ali.krgn"]
-  spec.email         = ["alikrgn@gmail.com"]
+  spec.email         = ["ali.sancopanco@gmail.com"]
 
   spec.summary       = %q{ Think of the tool as a CLI version of sites like https://statuspages.me/. }
-  spec.homepage      = "TODO: Put your gem's website or public repo URL here."
+  spec.homepage      = "https://github.com/sancopanco/status-page"
   spec.license       = "MIT"
-
-  # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
-  # to allow pushing to a single host or delete this section to allow pushing to any host.
-  if spec.respond_to?(:metadata)
-    spec.metadata["allowed_push_host"] = "TODO: Set to 'http://mygemserver.com'"
-  else
-    raise "RubyGems 2.0 or newer is required to protect against " \
-      "public gem pushes."
-  end
 
   spec.files         = `git ls-files -z`.split("\x0").reject do |f|
     f.match(%r{^(test|spec|features)/})
