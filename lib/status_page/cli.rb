@@ -96,9 +96,8 @@ module StatusPage
     def read_services
       services = []
       read do |row|
-        services << StatusPage::Service.new(name:row[0], url:row[1],
-          status_page_css:row[2], 
-          status:row[3], time: row[4])
+        services << StatusPage::Service.new(name:row[0], url:row[1], 
+                    status:row[3], time: row[4])
       end
       services
     end
@@ -106,10 +105,10 @@ module StatusPage
     def default_options
      Thor::CoreExt::HashWithIndifferentAccess.new ({
         services:[
-          {name: "RubyGems", url: "https://status.rubygems.org/", status_page_css: "div.page-status > span.status"},
-          {name: "Github", url: "https://status.github.com/messages", status_page_css: "div.message > span.title"},
-          {name: "Cloudflare", url: "https://www.cloudflarestatus.com/", status_page_css: "div.page-status > span.status"},
-          {name: "Bitbucket", url: "https://status.bitbucket.org/",status_page_css: "div.page-status > span.status"}
+          {name: "RubyGems", url: "https://status.rubygems.org/", status_page_css: ["div.page-status > span.status"]},
+          {name: "Github", url: "https://status.github.com/messages", status_page_css: ["div.message > span.title"]},
+          {name: "Cloudflare", url: "https://www.cloudflarestatus.com/", status_page_css: ["div.page-status > span.status","div.incident-title > a.actual-title"]},
+          {name: "Bitbucket", url: "https://status.bitbucket.org/",status_page_css: ["div.page-status > span.status","div.incident-title > a.actual-title"]}
         ],
         "yell": false,
         backup_file: backup_file

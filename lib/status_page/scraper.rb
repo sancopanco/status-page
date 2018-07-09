@@ -1,6 +1,5 @@
 require "nokogiri"
 require "httparty"
-
 module StatusPage
   class Scraper
     include HTTParty
@@ -16,7 +15,13 @@ module StatusPage
     end
 
     def get_status(status_page_css)
-      page.at_css(status_page_css).text.strip      
+      page_element = nil
+      status_page_css.each do |css|
+        page_element = page.at_css(css)
+        break if page_element
+      end
+      return "-" unless page_element
+      page_element.text.strip  
     end
   end
 end

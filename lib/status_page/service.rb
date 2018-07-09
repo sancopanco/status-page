@@ -4,7 +4,7 @@ module StatusPage
     def initialize(opts)
       @name = opts.fetch(:name)
       @url = opts.fetch(:url)
-      @status_page_css = opts.fetch(:status_page_css)
+      @status_page_css = opts.fetch(:status_page_css,[])
       @status = opts.fetch(:status,"")
       @time = DateTime.parse opts.fetch(:time, DateTime.now.to_s)  
     end
@@ -15,7 +15,7 @@ module StatusPage
     end
 
     def to_s
-      "#{name},#{url},#{status_page_css},#{status},#{time}"
+      "#{name},#{url},#{status_page_css.join("|")},#{status},#{time}"
     end
   end
 end
