@@ -1,6 +1,7 @@
 module StatusPage
   class Service
-    attr_accessor :name, :status, :url, :status_page_css, :time
+    attr_accessor :name, :status, :url, :status_page_css, :time, :scraper
+
     def initialize(opts)
       @name = opts.fetch(:name)
       @url = opts.fetch(:url)
@@ -11,10 +12,14 @@ module StatusPage
 
     def status(live = true)
       return @status unless live
-      Scraper.new(url).get_status(status_page_css)
+      scraper.get_status(status_page_css)
     rescue Scraper::ScraperError => ex
       STDOUT.puts ex
       return "-"
+    end
+
+    def scraper
+      @scraper || Scraper.new(url)
     end
 
     def to_csv

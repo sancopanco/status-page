@@ -1,58 +1,49 @@
 require "spec_helper"
 
-describe 'StatusPage::Storage' do
-  subject(:subject) do
-    class Storager
-      include StatusPage::Storage
-
-      def file_path
-        "file_path"
-      end
-    end
-    Storager.new
+describe 'StatusPage::Storage::CSV' do
+  subject(:csv_storage) do
+    storage = StatusPage::Storage::CSV.new
+    storage.file_path = 'spec/fixtures/file.csv'
+    storage.backup_path = 'spec/fixtures/file.csv.backup'
+    storage
   end
 
-  describe '.save' do
+  let(:items) do
+    [ 
+      double('item', to_csv: ['item1', 'status']),
+      double('item', to_csv: ['item2', 'status'])
+    ]
+  end
+
+  before do
+    File.truncate(csv_storage.file_path, 0)
+  end
+
+  describe '.write' do
     it 'should save items as csv to file_path' do
-      csv = double("csv")
-      items = double("items")
-      expect(CSV).to receive(:open).with("file_path","a+").and_yield(csv)
-      expect_any_instance_of(StatusPage::Storage).to receive(:append_csv).with(csv, items)
-      subject.save(items)
-    end
-  end
+      csv_storage.write(items)
 
-  describe '.read' do
-    it 'should read and yield from file_path' do
-      row = double("row")
-      expect(CSV).to receive(:foreach).with("file_path").and_yield(row)
-      subject.read{}  
+      items = read_items
+      expect(items.size).to eq(2)
     end
   end
 
   describe '.create_backup' do
-    let(:path) { "path" }
     it 'should backup to path' do
-      expect(File).to receive(:rename).with("file_path", path)
-      expect(FileUtils).to receive(:cp).with(path, "file_path")
-      subject.create_backup(path)
+      csv_storage.write(items)
+      csv_storage.create_backup
+      csv_storage.restore_backup
+      
+      items = read_items
+      expect(items.size).to eq(2)
     end
   end
 
-  describe '.restore_backup' do
-    let(:path) { "path" }
-    it 'should restore from path' do
-      expect(FileUtils).to receive(:cp).with(path, "file_path")
-      subject.restore_backup(path)
+  def read_items
+    items = []
+    csv_storage.read do |item|
+      items << item
     end
+    items
   end
-
-  describe '.backup_file' do
-    it { should respond_to(:backup_file) }
-  end
-
-  describe '.file_path' do
-    it { should respond_to(:file_path) }
-  end
-
 end

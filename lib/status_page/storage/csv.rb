@@ -18,11 +18,11 @@ module StatusPage
       end
 
       def file_path
-        File.join(ENV['HOME'], ".status-page.csv")
+        @file_path || File.join(ENV['HOME'], ".status-page.csv")
       end
 
       def backup_path
-        File.join(ENV['HOME'], '.status-page.csv.backup')
+       @backup_path || File.join(ENV['HOME'], '.status-page.csv.backup')
       end
     end
   end
