@@ -1,17 +1,18 @@
 require "nokogiri"
-require "httparty"
+require "faraday"
+
 module StatusPage
   class Scraper
     class ScraperError < StandardError; end
 
-    include HTTParty
-    attr_accessor :url
+    attr_accessor :url, :client
     attr_reader :page
 
     def initialize(url)
       @url = url
-      @page = Nokogiri::HTML(self.class.get(@url))
-    rescue SocketError, HTTParty::Error, Net::OpenTimeout => ex
+      @response = client.get(@url)
+      @page = Nokogiri::HTML(@response.body)
+    rescue Faraday::Error, Net::OpenTimeout => ex
       STDERR.puts ex
       raise ScraperError.new(ex)
     end
@@ -24,6 +25,10 @@ module StatusPage
       end
       return "-" unless page_element
       page_element.text.strip  
+    end
+
+    def client
+      @client || Faraday
     end
   end
 end

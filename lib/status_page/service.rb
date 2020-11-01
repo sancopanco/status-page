@@ -1,3 +1,4 @@
+require 'date'
 module StatusPage
   class Service
     attr_accessor :name, :status, :url, :status_page_css, :time, :scraper

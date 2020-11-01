@@ -1,3 +1,4 @@
+require 'csv'
 module StatusPage
   module Storage
     class CSV
