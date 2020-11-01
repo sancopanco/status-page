@@ -2,6 +2,8 @@ require "nokogiri"
 require "httparty"
 module StatusPage
   class Scraper
+    class ScraperError < StandardError; end
+
     include HTTParty
     attr_accessor :url
     attr_reader :page
@@ -11,7 +13,7 @@ module StatusPage
       @page = Nokogiri::HTML(self.class.get(@url))
     rescue SocketError, HTTParty::Error, Net::OpenTimeout => ex
       STDERR.puts ex
-      raise
+      raise ScraperError.new(ex)
     end
 
     def get_status(status_page_css)

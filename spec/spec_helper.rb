@@ -1,4 +1,5 @@
 require "status_page"
+require "pry"
 
 def status_page(args)
   capture_stdout do

@@ -12,10 +12,13 @@ module StatusPage
     def status(live = true)
       return @status unless live
       Scraper.new(url).get_status(status_page_css)
+    rescue Scraper::ScraperError => ex
+      STDOUT.puts ex
+      return "-"
     end
 
-    def to_s
-      "#{name},#{url},#{status_page_css.join("|")},#{status},#{time}"
+    def to_csv
+      [name, url, status_page_css.join("|"), status, time]
     end
   end
 end
