@@ -1,6 +1,4 @@
 require "status_page"
-require "pry"
-# FIXTURES_PATH = File.expand_path("../lib", __FILE__)
 
 def status_page(args)
   capture_stdout do

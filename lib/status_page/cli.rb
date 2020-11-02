@@ -1,5 +1,4 @@
 require_relative "storage/csv"
-require 'pry'
 module StatusPage
   class CLI < Thor
     attr_accessor :storage, :services, :cli_options, :formater
