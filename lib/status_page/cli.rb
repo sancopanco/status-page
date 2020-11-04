@@ -1,8 +1,7 @@
-require "status_page/storage"
-
+require_relative "storage/csv"
 module StatusPage
   class CLI < Thor
-    include Storage
+    attr_accessor :storage, :services, :cli_options, :formater
 
     class_option :config_file, default: File.join(ENV['HOME'],'.status-page.rc.yaml')
     class_option :service_name
@@ -14,8 +13,8 @@ module StatusPage
       You can optionally specify a second parameter, which will print
       out a from message as well. }
     def pull
-      live_log if options[:yell]
-      save(get_services)
+      live_log if cli_options[:yell]
+      storage.write(services)
     end
 
     desc "live", "Output the status periodically on the console"
@@ -26,7 +25,7 @@ module StatusPage
     def live
       loop do
         live_log
-        save(get_services)
+        storage.write(services)
         trap(:INT) { 
            #TODO: make it stable
            puts "Exiting program"
@@ -44,15 +43,15 @@ module StatusPage
 
     desc "backup <path>", "Creates a backup of historic and currently saved data."
     long_desc %Q{ Creates a backup of historic and currently saved data. }
-    def backup(path=backup_file)
-      create_backup(path)
+    def backup(path = storage.backup_path)
+      storage.create_backup(path)
     end
 
     desc "restore <path>", "Restore backup data"
     long_desc %Q{ Takes a path variable which is a backup
                 created by the application and restores that data. }
-    def restore(path=backup_file)
-      restore_backup(path)
+    def restore(path = storage.backup_path)
+      storage.restore_backup(path)
     end
 
     desc "status", "Summarizes the data and displays"
@@ -65,37 +64,48 @@ module StatusPage
       puts StatusPage::VERSION
     end
 
+    def storage
+      @storage || Storage::CSV.new
+    end
+
+    def services
+      @services || default_services
+    end
+
+    def cli_options
+      @cli_options || build_options
+    end
+
+    def formater
+      @formater || default_formater
+    end
+
     private
 
     def live_log
-      formater.format(get_services)
+      formater.format(services)
     end
 
     def history_log
       formater.format(read_services, live=false)
     end
 
-    def formater
-      formater = output_formats[options[:format]]
-    end
-
-    def output_formats
+    def default_formater
       {
         "csv" => StatusPage::Format::CSV.new,
         "pretty" =>  StatusPage::Format::Pretty.new,
         "table" => StatusPage::Format::Table.new
-      }
+      }[options[:format]]
     end
 
-    def get_services
-      services = options[:services].map{|s| StatusPage::Service.new(s) }
-      services = services.select{|s| s.name == options[:service_name]} if options[:service_name]
-      services
+    def default_services
+      cli_options[:services].map{|s| StatusPage::Service.new(s) }
+         .select{|s| s.name != cli_options[:service_name] }
     end
 
     def read_services
       services = []
-      read do |row|
+      storage.read do |row|
         services << StatusPage::Service.new(name:row[0], url:row[1], 
                     status:row[3], time: row[4])
       end
@@ -111,12 +121,12 @@ module StatusPage
           {name: "Bitbucket", url: "https://status.bitbucket.org/",status_page_css: ["div.page-status > span.status","div.incident-title > a.actual-title"]}
         ],
         "yell": false,
-        backup_file: backup_file
+        backup_file: storage.backup_path
       })
     end
 
-    def options
-      original_options = super
+    def build_options
+      original_options = options
       opts = default_options.merge(original_options)
       if File.exists? original_options[:config_file]
         options_config = YAML.load_file(original_options[:config_file])
